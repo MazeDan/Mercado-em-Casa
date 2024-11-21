@@ -1,3 +1,5 @@
+![Logo do Projeto](logo.png)
+
 # Sistema de Rastreamento de Localização em Tempo Real
 
 ## Descrição
