@@ -85,10 +85,12 @@ O objetivo é fornecer uma solução que possa rastrear múltiplos entregadores 
 ## O que foi Feito
 
 
-|Feito                |AÇÃO |
+|Feito                |AÇÃO | AUTOR
 |----------------|-------------------------------|
-|🟢|Desenvolvimento do servidor SocketIO    |            
-|🟢|   Desenvolvimento do receptor do entregador|
+|🟢|Desenvolvimento da Logo    |  DANIEL SANTANA
+|🟢|Desenvolvimento do servidor SocketIO    |            DANIEL SANTANA
+|🟢|   Desenvolvimento do receptor do entregador| DANIEL SANTANA
+|🔴|Front-end da Pagina|
 |🔴|Desenvolvimento do sistema de login|
 |🔴|Conexão do sistema de login com o receptor do entregador|
 
