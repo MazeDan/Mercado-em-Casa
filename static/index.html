@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Localização dos Entregadores</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+</head>
+<body>
+    <h2>Localizações dos Entregadores:</h2>
+    <div id="locations"></div>
+    <div id="map" style="height: 500px;"></div>
+
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script type="text/javascript">
+
+        
+        // Inicializa o mapa em uma coordenada padrão (0, 0)
+        var map = L.map('map').setView([0, 0], 2);
+
+        // Adiciona um tile layer (camada de mapa)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Objeto para armazenar os marcadores de cada entregador
+        const entregadorMarkers = {};
+
+        // Conexão ao servidor WebSocket
+        const socket = io('http://localhost:5000');
+
+        // Recebe atualizações de localização de um entregador específico
+        socket.on('location_update', function(data) {
+            const id = data.id;
+            const latitude = data.latitude;
+            const longitude = data.longitude;
+
+            // Atualiza ou cria o marcador do entregador
+            if (entregadorMarkers[id]) {
+                // Se o marcador já existe, apenas atualize a posição
+                entregadorMarkers[id].setLatLng([latitude, longitude]);
+            } else {
+                // Se o marcador não existe, crie um novo marcador
+                entregadorMarkers[id] = L.marker([latitude, longitude])
+                    .addTo(map)
+                    .bindPopup(`Entregador ${id}`);
+            }
+
+            // Centraliza o mapa na localização do último entregador atualizado
+            map.setView([latitude, longitude], 13);
+
+            // Atualiza a interface de texto
+            atualizarInterface(id, { latitude, longitude });
+        });
+
+        // Função para atualizar a interface com a localização dos entregadores
+        function atualizarInterface(id, location) {
+            const locationDiv = document.getElementById("locations");
+            let entregadorInfo = document.getElementById(`entregador_${id}`);
+
+            console.log(entregadorInfo)
+
+            if (!entregadorInfo) {
+                entregadorInfo = document.createElement("p");
+                entregadorInfo.id = `entregador_${id}`;
+                locationDiv.appendChild(entregadorInfo);
+            }
+
+            entregadorInfo.innerHTML = `Entregador ${id}: Latitude: ${location.latitude}, Longitude: ${location.longitude}`;
+        }
+    </script>
+</body>
+</html>
