@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página do Entregador</title>
+</head>
+<body>
+    <h1>Bem-vindo, {{ nome }}!</h1>
+    <p>Essa página é um exemplo de como usar templates no Flask.</p>
+
+    <button id="sendLocationButton">Enviar Localização</button>
+
+    <script>
+        document.getElementById("sendLocationButton").addEventListener("click", function() {
+            // Enviar a requisição para o servidor Flask
+            fetch('http://localhost:5000/enviar_localizacao', {
+                method: 'POST',
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Localização enviada:', data);
+            })
+            .catch(error => {
+                console.error('Erro ao enviar localização:', error);
+            });
+        });
+    </script>
+</body>
+</html>
