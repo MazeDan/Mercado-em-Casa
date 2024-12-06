@@ -4,10 +4,69 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Página do Entregador</title>
+<style>
+        /* Reset básico */
+        body, h1, button {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Estilização geral */
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: red; /* Fundo inicial vermelho */
+            color: white;
+            transition: background-color 0.2s ease; /* Transição suave */
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        /* Estilização do botão */
+        button {
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            color: white;
+            background: #333;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.2s ease; /* Transição suave no botão */
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            background: #555;
+        }
+
+        button:active {
+            background: #111;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Para telas menores */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            button {
+                font-size: 1rem;
+                padding: 8px 16px;
+            }
+        }
+    </style>
 </head>
 <body>
     <h1>Bem-vindo, {{ name }}</h1>
-    <p>Essa página é um exemplo de como usar templates no Flask.</p>
 
     <button id="sendLocationButton">Ativar envio de Localização</button>
 
@@ -63,6 +122,17 @@
         document.getElementById("sendLocationButton").addEventListener("click", function() {
             getDeviceLocation();  // Chama a função para começar a observar a localização e enviar dados
         });
+
+
+
+                // Referência ao botão
+        const button = document.getElementById("sendLocationButton");
+
+        // Evento de clique para alterar a cor do fundo
+        button.addEventListener("click", function() {
+            document.body.style.backgroundColor = "green"; // Altera o fundo para verde
+        });
+
     </script>
 </body>
 </html>
