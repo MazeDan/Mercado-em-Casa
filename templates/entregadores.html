@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
 </head>
 <body>
+    <h2>Bem-vindo, {{ name }}</h2>
     <h2>Localizações dos Entregadores:</h2>
     <div id="locations"></div>
     <div id="map" style="height: 500px;"></div>
@@ -15,7 +16,6 @@
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script type="text/javascript">
 
-        
         // Inicializa o mapa em uma coordenada padrão (0, 0)
         var map = L.map('map').setView([0, 0], 2);
 
@@ -26,6 +26,7 @@
 
         // Objeto para armazenar os marcadores de cada entregador
         const entregadorMarkers = {};
+        const entregadorTimeouts = {}; // Para controlar o tempo de inatividade dos entregadores
 
         // Conexão ao servidor WebSocket
         const socket = io('http://localhost:5000');
@@ -52,6 +53,9 @@
 
             // Atualiza a interface de texto
             atualizarInterface(id, { latitude, longitude });
+
+            // Atualiza o tempo de atividade do entregador
+            resetEntregadorTimeout(id);
         });
 
         // Função para atualizar a interface com a localização dos entregadores
@@ -59,16 +63,50 @@
             const locationDiv = document.getElementById("locations");
             let entregadorInfo = document.getElementById(`entregador_${id}`);
 
-            console.log(entregadorInfo)
-
             if (!entregadorInfo) {
+                // Cria um novo parágrafo para o entregador se ainda não existir
                 entregadorInfo = document.createElement("p");
                 entregadorInfo.id = `entregador_${id}`;
                 locationDiv.appendChild(entregadorInfo);
             }
 
+            // Atualiza a latitude e longitude do entregador na interface
             entregadorInfo.innerHTML = `Entregador ${id}: Latitude: ${location.latitude}, Longitude: ${location.longitude}`;
         }
+
+        // Função para remover entregador após inatividade
+        function removerEntregador(id) {
+            // Remove o marcador
+            if (entregadorMarkers[id]) {
+                map.removeLayer(entregadorMarkers[id]);
+                delete entregadorMarkers[id];
+            }
+
+            // Remove o parágrafo de localização
+            const entregadorInfo = document.getElementById(`entregador_${id}`);
+            if (entregadorInfo) {
+                entregadorInfo.remove();
+            }
+        }
+
+        // Função para resetar o tempo de inatividade do entregador
+        function resetEntregadorTimeout(id) {
+            // Limpa o timeout anterior, se houver
+            if (entregadorTimeouts[id]) {
+                clearTimeout(entregadorTimeouts[id]);
+            }
+
+            // Define o tempo de inatividade após 5 minutos
+            entregadorTimeouts[id] = setTimeout(function() {
+                removerEntregador(id);
+            }, 5 * 60 * 1000); // 5 minutos em milissegundos
+        }
+
+        // Ao conectar, recebe todas as localizações atuais
+        socket.on('connect', function() {
+            socket.emit('get_all_locations');
+        });
+
     </script>
 </body>
 </html>

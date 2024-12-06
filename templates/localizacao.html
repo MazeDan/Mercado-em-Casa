@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página do Entregador</title>
+</head>
+<body>
+    <h1>Bem-vindo, {{ name }}</h1>
+    <p>Essa página é um exemplo de como usar templates no Flask.</p>
+
+    <button id="sendLocationButton">Ativar envio de Localização</button>
+
+    <script>
+        // Função para obter a localização e enviar ao servidor
+        function getDeviceLocation() {
+            // Verifica se a Geolocation API está disponível no navegador
+            if ("geolocation" in navigator) {
+                navigator.geolocation.watchPosition(function(position) {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+
+                    // Envia os dados de localização para o backend
+                    sendLocationToBackend(latitude, longitude);
+                }, function(error) {
+                    console.error("Erro ao obter localização: ", error);
+                }, {
+                    enableHighAccuracy: true,  // Tenta obter a localização mais precisa possível
+                    timeout: 5000,  // Tempo máximo para tentar obter a localização
+                    maximumAge: 0  // Não usa a posição armazenada em cache
+                });
+            } else {
+                console.error("Geolocalização não disponível no navegador.");
+            }
+        }
+
+        // Função para enviar os dados de localização ao backend
+        function sendLocationToBackend(latitude, longitude) {
+            const entregadorId = '{{ name }}'; // Usando o ID do entregador (ou qualquer ID único)
+
+            // Enviar a requisição para o servidor Flask
+            fetch('http://localhost:5000/update_location', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    id: entregadorId,
+                    latitude: latitude,
+                    longitude: longitude
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Localização enviada:', data);
+            })
+            .catch(error => {
+                console.error('Erro ao enviar localização:', error);
+            });
+        }
+
+        // Adiciona um ouvinte de evento ao botão de ativação
+        document.getElementById("sendLocationButton").addEventListener("click", function() {
+            getDeviceLocation();  // Chama a função para começar a observar a localização e enviar dados
+        });
+    </script>
+</body>
+</html>
