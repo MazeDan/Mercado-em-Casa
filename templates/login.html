@@ -1,0 +1,159 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Mercado Em Casa</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        /* Corpo principal */
+        body {
+            background-color: #EEEEEE; /* Cor de fundo */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            position: relative; /* Necessário para pseudo-elementos */
+            overflow: hidden; /* Evita scroll extra por conta do pattern */
+        }
+
+        /* Pseudo-elemento para o pattern diagonal */
+        body::before {
+            content: ''; /* Elemento vazio para o pattern */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://cdn.glitch.global/8911b0b3-9bc4-4c86-8f15-70407ced3901/Icone.png?v=1732785175442'); /* Substitua pela logo correta */
+            background-repeat: repeat; /* Repetir a imagem */
+            background-size: 90px; /* Ajusta o tamanho da logo */
+            background-position: center; /* Centralizando Background */
+            filter: grayscale(100%); /* Deixa a logo monocromática */
+            opacity: 0.1; /* Reduz opacidade do pattern */
+            z-index: 0; /* Fica atrás do conteúdo principal */
+        }
+
+        /* Container principal do formulário */
+        .login-container {
+            background: #FFFFFF;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            max-width: 400px;
+            width: 100%;
+            position: relative;
+            z-index: 1; /* Garante que o formulário fique acima do padrão */
+            text-align: center; /* Centraliza o conteúdo do container */
+        }
+
+        /* Centraliza a logo no container */
+        .login-header img {
+            display: block;
+            margin: 0 auto 1rem auto; /* Espaçamento inferior */
+            max-width: 150px; /* Ajusta tamanho da logo */
+        }
+
+
+        /* Campos de entrada com foco */
+        .input-group:focus-within {
+            border: 1px solid #3ABC50; /* Borda verde ao focar */
+            border-radius: 5px; /* Adiciona borda arredondada */
+            box-shadow: 0 0 8px rgba(58, 188, 80, 0.5); /* Efeito de brilho */
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* Ícones com hover e foco */
+        .input-group:focus-within .icon {
+            color: #3ABC50; /* Cor verde ao focar */
+            transition: color 0.3s ease; /* Transição suave */
+        }
+
+        .icon {
+            color: #CCCCCC; /* Cor padrão do ícone */
+        }
+
+        .btn-login {
+            background-color: #F2620D;
+            border: none;
+            color: #FFFFFF;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn-login:hover {
+            transform: scale(1.05);
+            background-color: #D8540C;
+        }
+
+        .forgot-password {
+            color: #032221;
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: block; /* Permite centralizar o elemento */
+            text-align: center;
+        }
+
+        .forgot-password:hover {
+            color: #F2620D;
+        }
+
+        .signup {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .signup a {
+            color: #F2620D;
+            text-decoration: none;
+        }
+
+        .signup a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Container principal -->
+    <div class="login-container">
+        <!-- Cabeçalho -->
+        <div class="login-header">
+            <img src="https://cdn.glitch.global/8911b0b3-9bc4-4c86-8f15-70407ced3901/logo.png?v=1732784918440" alt="Logo Mercado Em Casa">
+            <strong><p>Bem-vindo! Faça login para continuar.</p></strong>
+        </div>
+        <!-- Formulário -->
+        <form method="post">
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <div class="input-group">
+                    <span class="input-group-text icon"><i class="fas fa-envelope"></i></span>
+                    <input type="email" name="email" id="email" class="form-control" placeholder="Digite seu email" required>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Senha</label>
+                <div class="input-group">
+                    <span class="input-group-text icon"><i class="fas fa-lock"></i></span>
+                    <input type="password" name="password" id="password" class="form-control" placeholder="Digite sua senha" required>
+                </div>
+            </div>
+            <div class="mb-3 text-end">
+                <a href="#" class="forgot-password">Esqueceu sua senha?</a>
+            </div>
+            <div class="d-grid">
+                <button type="submit" class="btn btn-login">Entrar</button>
+            </div>
+        </form>
+        <div class="signup">
+            <p>Não tem uma conta? <a href="{{ url_for('register') }}">Cadastre-se</a></p>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

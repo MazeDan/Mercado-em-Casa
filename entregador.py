@@ -1,8 +1,11 @@
-import requests
-import time
+from flask import Flask, jsonify
 import random
+import time
+import threading
+import requests
 
-# Configurações
+app = Flask(__name__)
+
 ENTREGADOR_ID = "entregador_1"  # Defina um identificador único para cada entregador
 SERVER_URL = "http://localhost:5000/update_location"
 
@@ -30,11 +33,12 @@ def enviar_localizacao():
     except requests.RequestException as e:
         print(f"Erro de conexão com o servidor: {e}")
 
-# Loop para enviar a localização periodicamente
-def main():
-    while True:
-        enviar_localizacao()
-        time.sleep(5)  # Aguarda 5 segundos antes de enviar a próxima localização
+# Rota que será chamada quando o botão for clicado
+@app.route('/enviar_localizacao', methods=['POST'])
+def acionar_enviar_localizacao():
+    # Cria uma thread para não bloquear o servidor
+    threading.Thread(target=enviar_localizacao).start()
+    return jsonify({"message": "Localização enviada com sucesso!"}), 200
 
-if __name__ == "__main__":
-    main()
+if __name__ == '__main__':
+    app.run(debug=True)

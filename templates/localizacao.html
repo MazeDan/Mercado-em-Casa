@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página do Entregador</title>
+<style>
+        /* Reset básico */
+        body, h1, button {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Estilização geral */
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: red; /* Fundo inicial vermelho */
+            color: white;
+            transition: background-color 0.2s ease; /* Transição suave */
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        /* Estilização do botão */
+        button {
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            color: white;
+            background: #333;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.2s ease; /* Transição suave no botão */
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            background: #555;
+        }
+
+        button:active {
+            background: #111;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Para telas menores */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            button {
+                font-size: 1rem;
+                padding: 8px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Bem-vindo, {{ name }}</h1>
+
+    <button id="sendLocationButton">Ativar envio de Localização</button>
+
+    <script>
+        // Função para obter a localização e enviar ao servidor
+        function getDeviceLocation() {
+            // Verifica se a Geolocation API está disponível no navegador
+            if ("geolocation" in navigator) {
+                navigator.geolocation.watchPosition(function(position) {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+
+                    // Envia os dados de localização para o backend
+                    sendLocationToBackend(latitude, longitude);
+                }, function(error) {
+                    console.error("Erro ao obter localização: ", error);
+                }, {
+                    enableHighAccuracy: true,  // Tenta obter a localização mais precisa possível
+                    timeout: 5000,  // Tempo máximo para tentar obter a localização
+                    maximumAge: 0  // Não usa a posição armazenada em cache
+                });
+            } else {
+                console.error("Geolocalização não disponível no navegador.");
+            }
+        }
+
+        // Função para enviar os dados de localização ao backend
+        function sendLocationToBackend(latitude, longitude) {
+            const entregadorId = '{{ name }}'; // Usando o ID do entregador (ou qualquer ID único)
+
+            // Enviar a requisição para o servidor Flask
+            fetch('http://localhost:5000/update_location', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    id: entregadorId,
+                    latitude: latitude,
+                    longitude: longitude
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Localização enviada:', data);
+            })
+            .catch(error => {
+                console.error('Erro ao enviar localização:', error);
+            });
+        }
+
+        // Adiciona um ouvinte de evento ao botão de ativação
+        document.getElementById("sendLocationButton").addEventListener("click", function() {
+            getDeviceLocation();  // Chama a função para começar a observar a localização e enviar dados
+        });
+
+
+
+                // Referência ao botão
+        const button = document.getElementById("sendLocationButton");
+
+        // Evento de clique para alterar a cor do fundo
+        button.addEventListener("click", function() {
+            document.body.style.backgroundColor = "green"; // Altera o fundo para verde
+        });
+
+    </script>
+</body>
+</html>
